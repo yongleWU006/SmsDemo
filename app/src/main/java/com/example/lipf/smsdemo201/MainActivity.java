@@ -1,8 +1,5 @@
 package com.example.lipf.smsdemo201;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -17,20 +14,12 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import cn.smssdk.utils.SMSLog;
 
 public class MainActivity extends AppCompatActivity implements SMSSDK.VerifyCodeReadListener{
-    private Button btn1,btn2,btn3;
+    private Button btn1,btn2;
     private EditText edt1,edt2;
     private TextView textV;
     private String phone;
@@ -41,12 +30,11 @@ public class MainActivity extends AppCompatActivity implements SMSSDK.VerifyCode
 
         btn1 = (Button)findViewById(R.id.button);
         btn2 = (Button)findViewById(R.id.button2);
-        btn3 = (Button)findViewById(R.id.button3);
         edt1 = (EditText)findViewById(R.id.editText);
         edt2 = (EditText)findViewById(R.id.editText2);
         textV = (TextView)findViewById(R.id.textView2);
 
-
+        // 注册一个事件回调，用于处理提交验证码操作的结果
         EventHandler eh=new EventHandler(){
 
             @Override
@@ -80,11 +68,6 @@ public class MainActivity extends AppCompatActivity implements SMSSDK.VerifyCode
             }
         });
 
-        btn3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
     }
 
 
@@ -117,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SMSSDK.VerifyCode
                 }
 
             } else {
+                // 处理错误的结果
 //				((Throwable) data).printStackTrace();
 //				Toast.makeText(MainActivity.this, "验证码错误", Toast.LENGTH_SHORT).show();
 //					Toast.makeText(MainActivity.this, "123", Toast.LENGTH_SHORT).show();
@@ -143,9 +127,11 @@ public class MainActivity extends AppCompatActivity implements SMSSDK.VerifyCode
 
     protected void onDestroy() {
         super.onDestroy();
+        // 用完回调要注销，否则会造成泄露
         SMSSDK.unregisterAllEventHandler();
     };
 
+    //获取验证码回调
     @Override
     public void onReadVerifyCode(String s) {
         textV.setText(s);
